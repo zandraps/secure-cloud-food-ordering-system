@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodExpress</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav>
+
+    <h2>🍔 FoodExpress</h2>
+
+    <div>
+
+        {% if username %}
+
+            <span style="color:white; margin-right:15px;">
+                Welcome, {{ username }}
+            </span>
+
+            <button onclick="window.location.href='/cart'">
+                Cart
+            </button>
+
+            <button onclick="window.location.href='/orders'">
+                My Orders
+            </button>
+
+            <button onclick="window.location.href='/logout'">
+                Logout
+            </button>
+
+        {% else %}
+
+            <button onclick="window.location.href='/login'">
+                Login
+            </button>
+
+            <button onclick="window.location.href='/register'">
+                Register
+            </button>
+
+        {% endif %}
+
+        <button onclick="window.location.href='/admin'">
+            Admin
+        </button>
+
+    </div>
+
+</nav>
+
+<h1>🍽 Secure Cloud Food Ordering System</h1>
+
+<p>Order your favorite food anytime, anywhere!</p>
+
+<div class="food-container">
+
+    {% for food in foods %}
+
+    <div class="food-card">
+
+        <h2>{{ food.name }}</h2>
+
+        <p>Price : ₹{{ food.price }}</p>
+
+        <button onclick="window.location.href='/add_to_cart/{{ food.id }}'">
+            Add to Cart
+        </button>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

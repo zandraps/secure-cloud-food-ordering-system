@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<nav>
+    <h2>🍔 FoodExpress</h2>
+</nav>
+
+<h1>🛒 My Cart</h1>
+
+<div class="food-container">
+
+    {% if cart_items %}
+
+        {% for item in cart_items %}
+
+        <div class="food-card">
+
+            <h2>{{ item.name }}</h2>
+
+            <p>Price : ₹{{ item.price }}</p>
+
+            <p>
+                Quantity :
+
+                <a href="/decrease_quantity/{{ item.id }}">
+                    <button>-</button>
+                </a>
+
+                {{ item.quantity }}
+
+                <a href="/increase_quantity/{{ item.id }}">
+                    <button>+</button>
+                </a>
+
+            </p>
+
+            <p>
+                Subtotal :
+                ₹{{ item.price * item.quantity }}
+            </p>
+
+            <a href="/remove_item/{{ item.id }}">
+                <button>Remove</button>
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <h2>Your Cart is Empty!</h2>
+
+    {% endif %}
+
+</div>
+
+<h2>Total : ₹{{ total }}</h2>
+
+<br>
+
+<a href="/place_order">
+    <button>Place Order</button>
+</a>
+
+<a href="/">
+    <button>Continue Shopping</button>
+</a>
+
+</body>
+</html>

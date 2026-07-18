@@ -1,0 +1,121 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f4f4;
+}
+
+nav{
+    background:#ff6b35;
+    color:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 40px;
+}
+
+nav h2{
+    color:white;
+}
+
+nav button{
+    background:white;
+    color:#ff6b35;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    margin-left:10px;
+}
+
+nav button:hover{
+    background:#f0f0f0;
+}
+
+h1{
+    text-align:center;
+    color:#ff6b35;
+    margin-top:35px;
+}
+
+p{
+    text-align:center;
+    font-size:18px;
+}
+
+.food-container{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:25px;
+    margin:40px;
+}
+
+.food-card{
+    background:white;
+    width:250px;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    transition:0.3s;
+}
+
+.food-card:hover{
+    transform:translateY(-5px);
+}
+
+.food-card h2{
+    color:#ff6b35;
+    margin-bottom:15px;
+}
+
+.food-card p{
+    margin:10px 0;
+}
+
+button{
+    background:#ff6b35;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    margin:5px;
+    font-size:15px;
+}
+
+button:hover{
+    background:#e85a28;
+}
+
+form{
+    width:350px;
+    margin:30px auto;
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.15);
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:15px;
+}
+
+a{
+    text-decoration:none;
+}
+
+h2{
+    text-align:center;
+    margin-top:20px;
+}

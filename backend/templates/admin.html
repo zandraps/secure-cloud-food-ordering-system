@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Admin Panel</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<nav>
+
+    <h2>👨‍💼 FoodExpress Admin</h2>
+
+</nav>
+
+<h1>Food Management</h1>
+
+<br>
+
+<a href="/add_food">
+
+    <button>Add New Food</button>
+
+</a>
+
+<br><br>
+
+<div class="food-container">
+
+{% if foods %}
+
+{% for food in foods %}
+
+<div class="food-card">
+
+    <h2>{{ food.name }}</h2>
+
+    <p>
+        Price : ₹{{ food.price }}
+    </p>
+
+    <a href="/edit_food/{{ food.id }}">
+        <button>Edit</button>
+    </a>
+
+    <a href="/delete_food/{{ food.id }}">
+        <button>Delete</button>
+    </a>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<h2>No Food Items Available</h2>
+
+{% endif %}
+
+</div>
+
+<br>
+
+<a href="/">
+    <button>Back to Home</button>
+</a>
+
+</body>
+
+</html>
