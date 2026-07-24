@@ -1,14 +1,24 @@
 from flask import Flask, render_template, request, redirect, session, url_for
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_bcrypt import Bcrypt
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import mysql.connector
+import os
 
 app = Flask(__name__)
-app.secret_key = "foodexpress_secret_key"
+bcrypt = Bcrypt(app)
+limiter = Limiter(
+    key_func=get_remote_address,
+    app=app
+)
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "foodexpress_dev_key")
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 db = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="san",
+    password=os.environ.get("DB_PASSWORD"),
     database="foodexpress"
 )
 
@@ -59,7 +69,7 @@ def register():
         if existing:
             return "Email already exists!"
 
-        hashed_password = generate_password_hash(password)
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
         cursor = db.cursor()
 
@@ -85,6 +95,7 @@ def register():
 # ---------------- LOGIN ---------------- #
 
 @app.route('/login', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def login():
 
     if request.method == "POST":
@@ -103,13 +114,14 @@ def login():
 
         if user:
 
-            if check_password_hash(
+            if bcrypt.check_password_hash(
                 user['password'],
                 password
             ):
 
                 session['user_id'] = user['id']
                 session['user_name'] = user['name']
+                session['role'] = user['role']
 
                 return redirect('/')
 
@@ -427,6 +439,9 @@ def order_details(order_id):
 @app.route('/admin')
 def admin():
 
+    if session.get('role') != 'admin':
+        return "Access Denied", 403
+
     cursor = db.cursor(dictionary=True)
 
     cursor.execute("""
@@ -447,6 +462,9 @@ def admin():
 
 @app.route('/add_food', methods=['GET', 'POST'])
 def add_food():
+
+    if session.get('role') != 'admin':
+        return "Access Denied", 403
 
     if request.method == "POST":
 
@@ -474,6 +492,9 @@ def add_food():
 
 @app.route('/edit_food/<int:food_id>', methods=['GET', 'POST'])
 def edit_food(food_id):
+
+    if session.get('role') != 'admin':
+        return "Access Denied", 403
 
     cursor = db.cursor(dictionary=True)
 
@@ -520,6 +541,9 @@ def edit_food(food_id):
 @app.route('/delete_food/<int:food_id>')
 def delete_food(food_id):
 
+    if session.get('role') != 'admin':
+        return "Access Denied", 403
+
     cursor = db.cursor()
 
     cursor.execute(
@@ -530,7 +554,20 @@ def delete_food(food_id):
     db.commit()
 
     return redirect('/admin')
+
+@app.after_request
+def add_security_headers(response):
+    response.headers['Content-Security-Policy'] = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'"
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    return response
+
+# ---------------- RUN APP ---------------- #
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
     # ---------------- RUN APP ---------------- #
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
