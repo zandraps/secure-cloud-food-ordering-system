@@ -564,10 +564,10 @@ def add_security_headers(response):
     return response
 
 # ---------------- RUN APP ---------------- #
+@app.route('/health')
+def health():
+    return "OK", 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-    # ---------------- RUN APP ---------------- #
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+  
